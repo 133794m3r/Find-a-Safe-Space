@@ -28,5 +28,11 @@ Here's a walkthrough of implemented chat bot:
 
 <img src='https://i.imgur.com/UWCN2vp.gif' width='' alt='Video Walkthrough' />
 
+
+
+<img src='https://i.imgur.com/hKVHUkm.gif' width='' alt='Video Walkthrough' />
+
+
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
