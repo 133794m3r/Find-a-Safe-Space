@@ -26,7 +26,7 @@ The following functionality are **planned** for future projects:
 
 Here's a walkthrough of implemented chat bot:
 
-<img src='https://i.imgur.com/qsDT3hX.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://i.imgur.com/UWCN2vp.gif' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
