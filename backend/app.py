@@ -18,37 +18,84 @@ def init_session(name):
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 Session(app)
-print(MYSQL_CREDS)
-engine = create_engine(MYSQL_CREDS)
+engine = create_engine(PSQL_CREDS)
 db = scoped_session(sessionmaker(bind=engine))
 #
 # mongo = PyMongo(app)
 
-
+def dict_proxy(result_proxy):
+	#return [{column: value for column, value in rowproxy.items()} for rowproxy in result_proxy]
+	return [{**row} for row in result_proxy]
 
 @app.route('/')
 def index():
 	return app.send_static_file('home.html')
 
-@app.route('/schedule',methods = ['POST', 'GET'])
-@app.route('/schedule/<event_id>',defaults={'event_id':None},methods=['POST','GET'])
-def schedule(event_id=None):
+@app.route('/rsvp/<event_id>')
+def rsvp(event_id):
+	import datetime
+	result = db.execute('select * from event_schedules where uid = :uid',
+	                    {'uid': event_id}).fetchall()
+	print(result)
+	data = dict_proxy(result)
+	if data:
+		data = data[0]
+	else:
+		return render_template('schedule.html', data=None)
+	print(data)
+	data['timestamp'] = datetime.datetime.fromtimestamp(int(data['start_time']))
+	return render_template('rsvp.html',data=data)
+
+@app.route('/schedule',defaults={'event_id':None,'event_pass':None},methods = ['POST', 'GET'])
+@app.route('/schedule/<event_id>',defaults={'event_pass':None},methods = ['Post','GET'])
+@app.route('/schedule/<event_id>/<event_pass>',methods=['POST','GET'])
+def schedule(event_id,event_pass):
+	print(event_id)
+	print(event_pass)
 	if request.method == "POST":
 		import datetime
+		import hashlib
+		import secrets
 		title = request.form.get('event_title')
 		event_location  = request.form.get('event_location')
 		start_date = request.form.get('start_date')
 		start_time = request.form.get('event_time')
-		modifier = 12 if start_time[-2:] == 'PM' else 0
-		start_time = start_time[:-3]
 		password = request.form.get('password')
 		user_tz = int(request.form.get('user_tz'))
-		time_str = f'{start_date} {start_time}'
-		time_stamp = datetime.datetime.strptime(time_str,'%m/%d/%Y %H:%M')
-		time_stamp.replace(hour=time_stamp + modifier + user_tz)
-		print(time_stamp)
-	return render_template('schedule.html',data=None)
-	pass
+		print('ut',request.form.get('user_time'))
+		hash_str = (title+request.form.get('user_time'))+str(datetime.datetime.now())+request.form.get('user_tz')
+		hash_str = hash_str.encode('utf-8')
+		time_stamp = datetime.datetime.fromtimestamp(int(request.form.get('user_time'))/1000)
+		time_stamp = time_stamp + datetime.timedelta(hours=user_tz)
+		time_stamp = time_stamp.timestamp()
+		uid = hashlib.sha1(hash_str+secrets.token_bytes(3)).hexdigest()
+		edit_pass = hashlib.sha1(hash_str+secrets.token_bytes(4)).hexdigest()
+		description = request.form.get('event_description')
+
+		print(uid)
+		result = db.execute('''insert into event_schedules(uid,start_time,event_location,event_description,title,password,edit_pass) values(:uid,:start_time,:event_location,:event_description,:title,:password,:edit_pass)''',{'uid':uid,'start_time':time_stamp,'password':password,'title':title,'event_location':event_location,'event_description':description,'edit_pass':edit_pass})
+		print(result)
+		db.commit()
+		result = db.execute('select * from event_schedules where uid = :uid',{'uid':uid}).fetchall()
+		data = dict_proxy(result)[0]
+		data['url'] = request.url_root
+		return render_template('schedule.html',data=data)
+		#return redirect('/schedule/'+uid+'/'+edit_pass)
+	elif event_id is not None and event_pass is not None:
+		result = db.execute('select * from event_schedules where uid = :uid and edit_pass = :edit_pass',{'uid':event_id,'edit_pass':event_pass}).fetchall()
+		data = dict_proxy(result)
+		if data:
+			data = data[0]
+		else:
+			return render_template('schedule.html', data=None)
+
+		data['url'] = request.url_root
+		print(data)
+		return render_template('schedule.html',data=data)
+	else:
+		return render_template('schedule.html',data=None)
+
+
 
 @app.route('/about')
 def about():
