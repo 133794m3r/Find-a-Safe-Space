@@ -148,16 +148,7 @@ key: computer 50
     reasmb: Don't you think computers can help people ?
     reasmb: What about machines worrys you ?
     reasmb: What do you think about machines ?
-key: am
-  decomp: * am i *
-    reasmb: Do you believe you are (2) ?
-    reasmb: Would you want to be (2) ?
-    reasmb: Do you wish I would tell you you are (2) ?
-    reasmb: What would it mean if you were (2) ?
-    reasmb: goto what
-  decomp: *
-    reasmb: Why do you say 'am' ?
-    reasmb: I don't understand that.
+
 key: are
   decomp: * are you *
     reasmb: Why are you interested in whether I am (2) or not ?

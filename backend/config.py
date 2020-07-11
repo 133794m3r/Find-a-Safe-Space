@@ -8,4 +8,5 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 SESSION_TYPE="filesystem"
 SESSION_FILE_DIR = "/tmp/flask_sessions/nhwt"
 SECRET=os.getenv("SECRET")
-MONGO_URI="mongodb+srv://{0}:{1}@mlh-summer-hacks-dqi2z.gcp.mongodb.net/geo_ip_data?retryWrites=true&w=majority".format(os.getenv('mdb_user'),os.getenv('mdb_pass'))
+MYSQL_CREDS="mysql://{0}@".format(os.getenv('MYSQL_CREDS'))
+print(MYSQL_CREDS)
