@@ -30,9 +30,24 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
 	return app.send_static_file('home.html')
 
-@app.route('/schedule')
-def schedule():
-	return render_template('schedule.html')
+@app.route('/schedule',methods = ['POST', 'GET'])
+@app.route('/schedule/<event_id>',defaults={'event_id':None},methods=['POST','GET'])
+def schedule(event_id=None):
+	if request.method == "POST":
+		import datetime
+		title = request.form.get('event_title')
+		event_location  = request.form.get('event_location')
+		start_date = request.form.get('start_date')
+		start_time = request.form.get('event_time')
+		modifier = 12 if start_time[-2:] == 'PM' else 0
+		start_time = start_time[:-3]
+		password = request.form.get('password')
+		user_tz = int(request.form.get('user_tz'))
+		time_str = f'{start_date} {start_time}'
+		time_stamp = datetime.datetime.strptime(time_str,'%m/%d/%Y %H:%M')
+		time_stamp.replace(hour=time_stamp + modifier + user_tz)
+		print(time_stamp)
+	return render_template('schedule.html',data=None)
 	pass
 
 @app.route('/about')

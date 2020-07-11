@@ -1,53 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Event Scheduler</title>
-{#	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">#}
-	<script type="text/javascript" defer src="{{ url_for('static',filename='js/bootstrap-timepicker.min.js') }}"></script>
-	<script type="text/javascript" async src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
-	<script type="text/javascript" defer src="{{ url_for('static',filename='js/script.js') }}"></script>
-	<script type="text/javascript" defe src="{{ url_for('static',filename='js/bootstrap-datepicker.min.js')  }}"></script>
-	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-datepicker3.css') }}">
-	<link href="{{ url_for('static',filename='css/bootstrap-timepicker.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}" >
-</head>
-<body>
-	<div class="main container p-3">
-		<form method="POST">
-			<div class="form-row">
-				<div class="form-group col-md-6">
-					<lable for="event_title">Event Title:</lable>
-					<input type="text" id="event_title" name="event_title">
-				</div>
-				<div class="form-group col-md-6">
-					<label for="event_location">Location</label>
-					<input type="text" id="event_location" name="event_location">
-				</div>
-			</div>
-			<div class="form-row">
-					<div class="input-group flex-nowrap col-4">
-						<div class="input-group-prepend">
-							<span class="input-group-text" id="addon-wrapping">Start</span>
+{% extends "layout.html" %}
+{% block body %}
+
+		<div id="submission">
+		{% if data %}
+				<form method="POST" action="/schedule">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<lable for="event_title">Event Title:</lable>
+							<input type="text" id="event_title" name="event_title" value="{{ data.event_title }}">
 						</div>
-						<input type="text" class="form-control datepicker" aria-label="start_date" aria-describedby="addon-wrapping">
+						<div class="form-group col-md-6">
+							<label for="event_location">Location</label>
+							<input type="text" id="event_location" name="event_location" value="{{ data.event_location }}">
+						</div>
 					</div>
-					<div class="input-group bootstrap-timepicker timepicker col-md-4">
-							<input id="event_timer" type="text" class="form-control input-small">
+					<div class="form-row">
+							<div class="input-group flex-nowrap col-4">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="addon-wrapping">Start</span>
+								</div>
+								<input type="text" class="form-control datepicker" aria-label="start_date" aria-describedby="addon-wrapping" name="start_date" value="{{ data.event_start }}">
+							</div>
+							<div class="input-group bootstrap-timepicker timepicker col-md-4">
+									<input id="event_timer" type="text" class="form-control input-small" value="{{ data.event_time }}">
+							</div>
 					</div>
-			</div>
-			<div class="form-row pt-4">
-				<div class="input-group flex-nowrap col-4">
-					<div class="input-group-prepend">
-    				<span class="input-group-text" id="password-prepend">Password</span>
-  				</div>
-  					<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend">
-				</div>
-				<div class="input-group flex-nowrap col-4">
-					<button type="button" class="btn btn-primary">Submit form</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</body>
-</html>
+					<div class="form-row pt-4">
+						<div class="input-group flex-nowrap col-4">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="password-prepend">Password</span>
+							</div>
+								<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend" value="{{ data.password }}">
+						</div>
+						<div class="input-group flex-nowrap col-4">
+							<button type="submit" class="btn btn-primary">Submit form</button>
+						</div>
+					</div>
+				</form>
+			{% else %}
+				<form method="POST" class="form_item" action="/schedule">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<lable for="event_title">Event Title:</lable>
+							<input type="text" id="event_title" name="event_title" value="" />
+						</div>
+						<div class="form-group col-md-6">
+							<label for="event_location">Location</label>
+							<input type="text" id="event_location" name="event_location" value="" />
+						</div>
+					</div>
+					<div class="form-row">
+							<div class="input-group flex-nowrap col-4">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="addon-wrapping">Start</span>
+								</div>
+								<input type="text" class="form-control datepicker" aria-label="start_date" aria-describedby="addon-wrapping">
+							</div>
+							<div class="input-group bootstrap-timepicker timepicker col-md-4">
+									<input id="event_timer" type="text" class="form-control input-small" name="event_time" />
+							</div>
+					</div>
+					<div class="form-row pt-4">
+						<div class="input-group flex-nowrap col-4">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="password-prepend">Password</span>
+							</div>
+								<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend" />
+								<input type="text" id="user_tz" name="user_tz" hidden="true" />
+						</div>
+						<div class="input-group flex-nowrap col-4">
+							<button type="button" class="btn btn-primary">Submit form</button>
+						</div>
+					</div>
+				</form>
+		{% endif %}
+		</div>
+{% endblock %}
