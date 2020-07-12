@@ -29,7 +29,7 @@ def dict_proxy(result_proxy):
 
 @app.route('/')
 def index():
-	return app.send_static_file('index.html')
+	return render_template('index.html')
 
 @app.route('/rsvp/<event_id>/<reservation_uid>',methods=['POST','GET'])
 @app.route('/rsvp/<event_id>',methods=['POST','GET'],defaults={'reservation_uid':None})
