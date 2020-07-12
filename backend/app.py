@@ -31,19 +31,51 @@ def dict_proxy(result_proxy):
 def index():
 	return app.send_static_file('home.html')
 
-@app.route('/rsvp/<event_id>')
-def rsvp(event_id):
+@app.route('/rsvp/<event_id>/<reservation_uid>',methods=['POST','GET'])
+@app.route('/rsvp/<event_id>',methods=['POST','GET'],defaults={'reservation_uid':None})
+def rsvp(event_id,reservation_uid):
 	import datetime
+	from hashlib import sha1
+	import base64
+	import secrets
 	result = db.execute('select * from event_schedules where uid = :uid',
 	                    {'uid': event_id}).fetchall()
-	print(result)
 	data = dict_proxy(result)
 	if data:
 		data = data[0]
 	else:
 		return render_template('schedule.html', data=None)
-	print(data)
+	if request.method == 'POST':
+		option = request.form.get('rsvp_option')
+		if option == 'yes':
+			choice = 1
+		elif option == 'no':
+			choice = 2
+		elif option == 'maybe':
+			choice = 3
+		else:
+			return render_template('rsvp.html',data=None)
+		name = request.form.get('name')
+		hash_str = str(datetime.datetime.now()).encode('utf-8') + secrets.token_bytes(3)
+		reservation_uid = base64.urlsafe_b64encode(sha1(hash_str).digest()).decode('utf-8')
+		db.execute('insert into user_reservations(event_id,choice,name,reservation_uid) values(:event_id,:choice,:name,:reservation_uid)',
+		           { 'event_id':session['event_id'],'choice':choice,'name':name,'reservation_uid':reservation_uid})
+		db.execute(f'update event_schedules set {option} = {option} + 1 where uid = :uid',{'option':option,'uid':event_id})
+		db.commit()
+		data['reservation_uid'] = reservation_uid
+		data['name'] = name
+		data[option] += 1
+	else:
+		if reservation_uid is None:
+			data['reservation_uid'] = ''
+		else:
+			data2 = db.execute('select * from user_reservations where reservation_uid = :reservation_uid')
+			dict_proxy(data2)
+			data = {**data, **data2}
+
+	session['event_id'] = data['uid']
 	data['timestamp'] = datetime.datetime.fromtimestamp(int(data['start_time']))
+	print(data)
 	return render_template('rsvp.html',data=data)
 
 @app.route('/schedule',defaults={'event_id':None,'event_pass':None},methods = ['POST', 'GET'])

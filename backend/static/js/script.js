@@ -26,13 +26,14 @@ $('body').ready( () => {
 		$('#event_timer').val(time)
 		$('#start_date').val(date)
 	}
-	$('form').submit( () => {
+	$('#schedule').submit( () => {
 		let date = $('#start_date').val()
 		let time = $('#event_timer').val()
+		if(date.length <= 1){
+			return false;
+		}
 		let ts = new Date(`${date} ${time}`).getTime();
-		alert(ts)
-		console.log('ts'+ts)
-		$('#user_time').val(ts)
-		return true
+		$('#user_time').val(ts);
+		return true;
 	});
 });
