@@ -59,7 +59,7 @@ def rsvp(event_id,reservation_uid):
 		hash_str = str(datetime.datetime.now()).encode('utf-8') + secrets.token_bytes(3)
 		reservation_uid = base64.urlsafe_b64encode(sha1(hash_str).digest()).decode('utf-8')
 		db.execute('insert into user_reservations(event_id,choice,name,reservation_uid) values(:event_id,:choice,:name,:reservation_uid)',
-		           { 'event_id':session['event_id'],'choice':choice,'name':name,'reservation_uid':reservation_uid})
+		           { 'event_id':data['id'],'choice':choice,'name':name,'reservation_uid':reservation_uid})
 		db.execute(f'update event_schedules set {option} = {option} + 1 where uid = :uid',{'option':option,'uid':event_id})
 		db.commit()
 		data['reservation_uid'] = reservation_uid
@@ -69,8 +69,8 @@ def rsvp(event_id,reservation_uid):
 		if reservation_uid is None:
 			data['reservation_uid'] = ''
 		else:
-			data2 = db.execute('select * from user_reservations where reservation_uid = :reservation_uid')
-			dict_proxy(data2)
+			data2 = db.execute('select * from user_reservations where reservation_uid = :reservation_uid',{'reservation_uid':reservation_uid})
+			data2=dict_proxy(data2)[0]
 			data = {**data, **data2}
 
 	data['url'] = request.url_root
