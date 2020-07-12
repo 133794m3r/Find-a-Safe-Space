@@ -12,16 +12,28 @@
 			<div class="row">
 				<div class="col-11">
 					<form method="POST" action="/schedule" id="schedule">
-						<div class="form-row row col-12">
-							<div class="form-group col-6">
-								<lable for="event_title">Event Title:</lable>
-								<input type="text" id="event_title" name="event_title" value="{{ data.title }}">
+						<div class="form-row row">
+							<div class="input-group form-group flex-nowrap col-6">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="event_name-prepend">Event Name</span>
+								</div>
+								<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_name-prepend" id="event_title" name="event_title" value="{{ data.title }}">
 							</div>
-							<div class="form-group col-6">
-								<label for="event_location">Location</label>
-								<input type="text" id="event_location" name="event_location" value="{{ data.event_location }}">
+							<div class="input-group form-group flex-nowrap col-6">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="event_location-prepend">Location</span>
+								</div>
+								<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_location-prepend" id="event_location" name="event_location" value="{{ data.event_location }}">
 							</div>
 						</div>
+					<div class="form-row input-group form-group">
+								<div class="input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="name-prepend">Your Name:</span>
+									</div>
+									<input type="text" class="form-control" aria-label="host_name" aria-describedby="name-prepend" id="host_name" name="host_name" value="{{ data.host_name }}">
+								</div>
+					</div>
 						<div class="form-row row">
 								<div class="input-group flex-nowrap col-6">
 									<div class="input-group-prepend">
@@ -65,15 +77,27 @@
 			</div>
 			{% else %}
 				<form method="POST" class="form_item" action="/schedule" id="schedule">
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<lable for="event_title">Event Title:</lable>
-							<input type="text" id="event_title" name="event_title" value="" />
+					<div class="form-row input-group form-group">
+						<div class="input-group flex-nowrap col-6">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="event_name-prepend">Event Name</span>
+							</div>
+							<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_name-prepend" id="event_title" name="event_title" value="">
 						</div>
-						<div class="form-group col-md-6">
-							<label for="event_location">Location</label>
-							<input type="text" id="event_location" name="event_location" value="" />
+						<div class="input-group flex-nowrap col-6">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="event_location-prepend">Location</span>
+							</div>
+							<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_location-prepend" id="event_location" name="event_location" value="">
 						</div>
+					</div>
+					<div class="form-row input-group form-group">
+								<div class="input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="name-prepend">Your Name:</span>
+									</div>
+									<input type="text" class="form-control" aria-label="host_name" aria-describedby="name-prepend" id="host_name" name="host_name" value="{{ data.host_name }}">
+								</div>
 					</div>
 					<div class="form-row">
 						<div class="input-group form-group col-7">

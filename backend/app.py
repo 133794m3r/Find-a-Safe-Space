@@ -56,6 +56,8 @@ def schedule(event_id,event_pass):
 		import datetime
 		import hashlib
 		import secrets
+		import base64
+		host_name = request.form.get('host_name')
 		title = request.form.get('event_title')
 		event_location  = request.form.get('event_location')
 		start_date = request.form.get('start_date')
@@ -68,12 +70,16 @@ def schedule(event_id,event_pass):
 		time_stamp = datetime.datetime.fromtimestamp(int(request.form.get('user_time'))/1000)
 		time_stamp = time_stamp + datetime.timedelta(hours=user_tz)
 		time_stamp = time_stamp.timestamp()
-		uid = hashlib.sha1(hash_str+secrets.token_bytes(3)).hexdigest()
-		edit_pass = hashlib.sha1(hash_str+secrets.token_bytes(4)).hexdigest()
+
+		uid = base64.urlsafe_b64encode(hashlib.sha1(hash_str+secrets.token_bytes(4)).digest()).decode('utf-8')
+		edit_pass = base64.urlsafe_b64encode(hashlib.sha1(hash_str+secrets.token_bytes(4)).digest()).decode('utf-8')
 		description = request.form.get('event_description')
 
 		print(uid)
-		result = db.execute('''insert into event_schedules(uid,start_time,event_location,event_description,title,password,edit_pass) values(:uid,:start_time,:event_location,:event_description,:title,:password,:edit_pass)''',{'uid':uid,'start_time':time_stamp,'password':password,'title':title,'event_location':event_location,'event_description':description,'edit_pass':edit_pass})
+		result = db.execute('''insert into event_schedules(uid,start_time,event_location,event_description,title,password,edit_pass,host_name) values(:uid,:start_time,:event_location,:event_description,:title,:password,:edit_pass,:host_name)''',
+		                    {'uid':uid, 'start_time':time_stamp, 'password':password, 'title':title,
+		                     'event_location':event_location, 'event_description':description, 'edit_pass':edit_pass,
+		                     'host_name':host_name})
 		print(result)
 		db.commit()
 		result = db.execute('select * from event_schedules where uid = :uid',{'uid':uid}).fetchall()
