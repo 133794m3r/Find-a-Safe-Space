@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% block body %}
+
+		<div id="submission" class="col-12">
+		{% if data %}
+			<div class="row">
+				Use this URL to edit this reservation. <a href="{{ data.url + 'schedule'+ data.uid+'/'+data.edit_pass }}">{{ data.url + '/' + data.uid+'/'+data.edit_pass }}</a>
+				<p>
+					And share this one with your friends so that they can RSVP this event. <a href="{{data.url + 'rsvp/'+  data.uid }}">{{ data.url + 'rsvp/' + data.uid }}</a>
+				</p>
+			</div>
+			<div class="row">
+				<div class="col-11">
+					<form method="POST" action="/schedule" id="schedule">
+						<div class="form-row row">
+							<div class="input-group form-group flex-nowrap col-6">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="event_name-prepend">Event Name</span>
+								</div>
+								<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_name-prepend" id="event_title" name="event_title" value="{{ data.title }}">
+							</div>
+							<div class="input-group form-group flex-nowrap col-6">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="event_location-prepend">Location</span>
+								</div>
+								<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_location-prepend" id="event_location" name="event_location" value="{{ data.event_location }}">
+							</div>
+						</div>
+					<div class="form-row input-group form-group">
+								<div class="input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="name-prepend">Your Name:</span>
+									</div>
+									<input type="text" class="form-control" aria-label="host_name" aria-describedby="name-prepend" id="host_name" name="host_name" value="{{ data.host_name }}">
+								</div>
+					</div>
+						<div class="form-row row">
+								<div class="input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="addon-wrapping">Start</span>
+									</div>
+									<input type="text" class="form-control datepicker" aria-label="start_date" aria-describedby="addon-wrapping" id="start_date" name="start_date" value="{{ data.event_start }}">
+								</div>
+								<div class="input-group bootstrap-timepicker timepicker col-md-4">
+										<input id="event_timer" type="text" class="form-control input-small" value="{{ data.start_time }}">
+								</div>
+						</div>
+						<div class="form-row row pt-2">
+							<div class="input-group form-group col-11">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="event_description-prepend">Description</span>
+								</div>
+								<textarea type="text" class="form-control" name="event_description" id="event_description" aria-describedby="password-prepend" >{{ data.event_description }}</textarea>
+							</div>
+						</div>
+						<div class="form-row row pt-2">
+							<div class="input-group flex-nowrap col-6">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="password-prepend">Password</span>
+								</div>
+									<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend" value="{{ data.password }}">
+									<input type="text" id="user_time" name="user_time" hidden="true" value="{{ data.start_time }}" />
+							</div>
+							<div class="input-group flex-nowrap col-6">
+								<button type="submit" class="btn btn-primary">Submit form</button>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="col-11">
+							<br />
+							<p>
+								So far here are your results. Yes:{{ data.yes }} No:{{ data.no }} Maybe:{{ data.maybe }}<br /> In total there are {{ data.yes+data.no+data.maybe }} people who have responded.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% else %}
+				<form method="POST" class="form_item" action="/schedule" id="schedule">
+					<div class="form-row input-group form-group">
+						<div class="input-group flex-nowrap col-6">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="event_name-prepend">Event Name</span>
+							</div>
+							<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_name-prepend" id="event_title" name="event_title" value="">
+						</div>
+						<div class="input-group flex-nowrap col-6">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="event_location-prepend">Location</span>
+							</div>
+							<input type="text" class="form-control" aria-label="event_title" aria-describedby="event_location-prepend" id="event_location" name="event_location" value="">
+						</div>
+					</div>
+					<div class="form-row input-group form-group">
+								<div class="input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="name-prepend">Your Name:</span>
+									</div>
+									<input type="text" class="form-control" aria-label="host_name" aria-describedby="name-prepend" id="host_name" name="host_name" value="{{ data.host_name }}">
+								</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group form-group col-7">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="event_description-prepend">Description</span>
+							</div>
+							<input type="text" class="form-control" name="event_description" id="event_description" aria-describedby="password-prepend" >
+						</div>
+					</div>
+					<div class="form-row">
+							<div class="input-group flex-nowrap form-group col-4">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="addon-wrapping">Start</span>
+								</div>
+								<input type="text" class="form-control datepicker" aria-label="start_date"  id="start_date" name="start_date" aria-describedby="addon-wrapping">
+							</div>
+							<div class="input-group bootstrap-timepicker timepicker col-md-4">
+									<input id="event_timer" type="text" class="form-control input-small" name="event_time" />
+							</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group form-group flex-nowrap col-4">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="password-prepend">Password</span>
+							</div>
+								<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend" />
+								<input type="text" id="user_tz" name="user_tz" hidden="true" />
+								<input type="text" id="user_time" name="user_time" hidden="true" />
+						</div>
+						<div class="input-group flex-nowrap form-group col-4">
+							<button type="submit" class="btn btn-primary">Submit form</button>
+						</div>
+					</div>
+				</form>
+		{% endif %}
+		</div>
+{% endblock %}
