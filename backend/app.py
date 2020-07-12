@@ -29,7 +29,7 @@ def dict_proxy(result_proxy):
 
 @app.route('/')
 def index():
-	return app.send_static_file('home.html')
+	return app.send_static_file('index.html')
 
 @app.route('/rsvp/<event_id>/<reservation_uid>',methods=['POST','GET'])
 @app.route('/rsvp/<event_id>',methods=['POST','GET'],defaults={'reservation_uid':None})
@@ -73,6 +73,7 @@ def rsvp(event_id,reservation_uid):
 			dict_proxy(data2)
 			data = {**data, **data2}
 
+	data['url'] = request.url_root
 	session['event_id'] = data['uid']
 	data['timestamp'] = datetime.datetime.fromtimestamp(int(data['start_time']))
 	print(data)
@@ -137,38 +138,14 @@ def schedule(event_id,event_pass):
 
 @app.route('/about')
 def about():
-	return app.send_static_file('about.html')
-
-@app.route('/msg',methods=["POST","GET"])
-def msg():
-	user_msg=''
-	user_data={}
-	response_msg=''
-	if request.method == "GET":
-		if len(request.args) > 0:
-			if session.get('handle') is None:
-				name=request.args.get('name')
-				response_msg=init_session(name)
-			else:
-				response_msg=session['eliza'].respond(request.args.get('msg'))
-		else:
-			return "nothing received"
-
-	else:
-		user_data=request.get_json()
-		if session.get('handle') is None:
-			response_msg=init_session(user_data.get('name'))
-		else:
-			#if request.form.get('msg') is not None:
-			response_msg=session['eliza'].respond(user_data.get('msg'))
-
-	return jsonify({'name':'Eliza','msg':response_msg})
+	return render_template('about.html')
 
 
 @app.route('/chat')
 def chat():
 	#session.clear()
-	return app.send_static_file('chat.html')
+	#return app.send_static_file('chat.html')
+	return render_template('chat.html')
 
 if __name__ == '__main__':
 	app.SECRET_KEY = 'super secret key'
