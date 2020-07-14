@@ -7,4 +7,10 @@ This project has being submitted into New Hacks Who This? Hackathon on Devpost d
 For more information about this project in more detail on devpost check it out below
 https://devpost.com/software/find-a-safe-space-3zv8ry
 
+set it live at https://findsafearea.online/
+
 Contributors: Richard Ho, Macarthur Inbody, and Mohamed Omane
+
+If you want to host it yourself use the backend folder, and then the server_config files folder. And also use the database to get up and going just like it was for us.
+
+
