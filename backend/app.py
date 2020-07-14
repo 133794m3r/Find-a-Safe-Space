@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import json
 #from . import eliza
-import eliza
+#import eliza
 from config import *
 
 #from json import loads as json_parse
@@ -15,11 +15,20 @@ def init_session(name):
 	session['eliza'].load('doctor.txt')
 	return session['eliza'].initial()
 
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
-Session(app)
-engine = create_engine(PSQL_CREDS)
-db = scoped_session(sessionmaker(bind=engine))
+def make_app():
+	application = Flask(__name__)
+	application.config.from_pyfile('config.py')
+	Session(application)
+	engine = create_engine(PSQL_CREDS)
+	db = scoped_session(sessionmaker(bind=engine))
+	return application
+
+#if __name__ == '__main__':
+#	app = make_app()
+#else:
+        #app = make_app()
+app = make_app()
+
 #
 # mongo = PyMongo(app)
 
@@ -97,7 +106,7 @@ def schedule(event_id,event_pass):
 		start_time = request.form.get('event_time')
 		password = request.form.get('password')
 		user_tz = int(request.form.get('user_tz'))
-		print('ut',request.form.get('user_time'))
+#		print('ut',request.form.get('user_time'))
 		hash_str = (title+request.form.get('user_time'))+str(datetime.datetime.now())+request.form.get('user_tz')
 		hash_str = hash_str.encode('utf-8')
 		time_stamp = datetime.datetime.fromtimestamp(int(request.form.get('user_time'))/1000)
@@ -108,12 +117,12 @@ def schedule(event_id,event_pass):
 		edit_pass = base64.urlsafe_b64encode(hashlib.sha1(hash_str+secrets.token_bytes(4)).digest()).decode('utf-8')
 		description = request.form.get('event_description')
 
-		print(uid)
+#		print(uid)
 		result = db.execute('''insert into event_schedules(uid,start_time,event_location,event_description,title,password,edit_pass,host_name) values(:uid,:start_time,:event_location,:event_description,:title,:password,:edit_pass,:host_name)''',
 		                    {'uid':uid, 'start_time':time_stamp, 'password':password, 'title':title,
 		                     'event_location':event_location, 'event_description':description, 'edit_pass':edit_pass,
 		                     'host_name':host_name})
-		print(result)
+#		print(result)
 		db.commit()
 		result = db.execute('select * from event_schedules where uid = :uid',{'uid':uid}).fetchall()
 		data = dict_proxy(result)[0]
@@ -129,7 +138,7 @@ def schedule(event_id,event_pass):
 			return render_template('schedule.html', data=None)
 
 		data['url'] = request.url_root
-		print(data)
+#		print(data)
 		return render_template('schedule.html',data=data)
 	else:
 		return render_template('schedule.html',data=None)
@@ -147,11 +156,5 @@ def chat():
 	#return app.send_static_file('chat.html')
 	return render_template('chat.html')
 
-if __name__ == '__main__':
-	app.SECRET_KEY = 'super secret key'
-	app.config['SESSION_TYPE'] = 'filesystem'
-	sess.init_app(app)
-	app.secret_key = 'super secret key'
-	app.run(debug=true,SECRET_KEY="secret")
-else:
-	application = app
+
+	
