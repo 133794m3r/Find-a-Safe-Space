@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block body %}
+			<div id="RSVP">
+			<br />
+				<div class="card col-12">
+					<div class="card-header">
+						{{ data.title }}
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Created by {{ data.host_name }}</h5>
+						<p class="card-text">
+							I will be hosting an event at {{ data.event_location }} at {{ data.timestamp}}.
+							{{ data.event_description }}
+{#						I would like for you to RSVP with me so I can get a head count. We will be opening google earch and doing a virtual walkthrough together as a group.#}
+						</p>
+						<p class="card-text">
+							So far the values are.
+							Yes:{{ data.yes }} Maybe:{{ data.maybe }} No:{{ data.no }}
+						</p>
+						<p>
+							to return to this page go to this URL. Save it for your records.
+							<a href="{{data.url + 'rsvp/'+  data.uid + '/' + data.reservation_uid }}">{{ data.url + 'rsvp/' + data.uid +'/'+ data.reservation_uid }}</a>
+						</p>
+						<div class="form-group">
+							<form method="POST">
+								<div class="form-row input-group flex-nowrap col-6">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="name-prepend">Your name:</span>
+									</div>
+									{% if data.name %}
+										<input type="text" class="form-control" id="name" name="name" aria-describedby="name-prepend" value="{{ data.name }}">
+									{% else %}
+										<input type="text" class="form-control" id="name" name="name" aria-describedby="name-prepend">
+									{% endif %}
+								</div>
+								<br />
+								<div class="form-row input-group flex-nowrap col-11">
+									<select name='rsvp_option' id="rsvp_option">
+										<option value="maybe">I might attend.</option>
+										<option value="yes">I will Attend.</option>
+										<option value="no">I won't be able to.</option>
+									</select>
+								</div>
+								<div class="form-row pt-4">
+									{% if data.reservation_uid %}
+									<div class="input-group flex-nowrap col-4 pl-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="password-prepend">Password</span>
+										</div>
+											<input type="text" class="form-control" id="password" name="password" aria-describedby="password-prepend" value="{{ data.reservation_uid }}">
+									</div>
+									{% endif %}
+									<input type="text" hidden="true" value="{{ data.reservation_uid }}"/>
+									<div class="input-group flex-nowrap col-4">
+										<button type="submit" class="btn btn-primary">Submit Response</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+{% endblock %}

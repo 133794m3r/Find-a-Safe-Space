@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI Instance to serve New Hacks Who This repo.
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/nhwt
+Environment="PATH=$PATH:/var/www/nhwt/bin"
+ExecStart=uwsgi -s/tmp/nhwt_socket.sock --manage-script-name --mount /=app:app
+
+[Install]
+WantedBy=multi-user.target
+

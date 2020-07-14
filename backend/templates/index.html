@@ -1,0 +1,43 @@
+<!--Name:Richard Ho
+Date: 7/10/20
+-->
+<! doctype html>
+ <html lang="en">
+    <head>
+       <meta charset="utf-8">
+        <title>Finding a Safety Area</title>
+        <link rel="stylesheet" href="static/slicknav.css">
+      <link rel="stylesheet" href="static/style.css">
+    </head>
+ 
+    <body>
+        <div class="banner-area">
+        <header>
+            <a href="#" class="logo">Finding a Safe Area</a>
+            
+            <ul class="menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+							<li><a href="{{ url_for('schedule') }}">Schedule A Meeting</a></li>
+							<li><a href="{{ url_for('chat') }}">Chat </a></li>
+            </ul>
+            </header>
+            <div class="banner-text">
+            <h2>Finding your destinations for your safety</h2>
+                <p></p>
+                <a href="chat.html">Launch Here</a>
+                <a href="about.html">Learn More</a>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+        </script>
+        <script src="static/jquery.slicknav.js"></script>
+        <script>
+            $('.menu').slicknav(
+                {
+                    'appendTo':'header',
+                    'label':''
+                });
+        </script>
+    </body>
+</html>

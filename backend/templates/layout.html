@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Event Scheduler</title>
+{#	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">#}
+
+	<script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+	<link rel="stylesheet" href="/static/slicknav.css">
+	<link rel="stylesheet" href="/static/style.css">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-datepicker3.css') }}">
+	<link href="{{ url_for('static',filename='css/bootstrap-timepicker.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}" >
+</head>
+<body>
+	        <div class="banner-area">
+        <header>
+            <a href="#" class="logo">Finding a Safe Area</a>
+
+            <ul class="menu">
+		    <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+							<li><a href="{{ url_for('chat') }}">Chat</a></li>
+							<li><a href="{{ url_for('schedule') }}">Schedule</a></li>
+            </ul>
+            </header>
+	<div class="main container p-3">
+
+
+
+{% block body %}
+{% endblock %}
+										</div>
+
+	</div>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap-timepicker.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap-datepicker.min.js')  }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/script.js') }}"></script>
+
+</body>
+</html>
